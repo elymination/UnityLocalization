@@ -16,14 +16,14 @@ public class CSVEditor
     [MenuItem("Assets/Edit CSV file", true)]
     private static bool ValidateEditCSV()
     {
-        var selected = Selection.activeObject;
-        string extension = string.Empty;
+        Object lSelected = Selection.activeObject;
+        string lExtension = string.Empty;
 
-        TextAsset asset = selected as TextAsset;
+        TextAsset asset = lSelected as TextAsset;
         if (asset != null)
         {
-            extension = Path.GetExtension(AssetDatabase.GetAssetPath(selected));
+            lExtension = Path.GetExtension(AssetDatabase.GetAssetPath(lSelected));
         }
-        return selected.GetType() == typeof(TextAsset) && extension.Equals(".csv");
+        return lSelected.GetType() == typeof(TextAsset) && lExtension.Equals(".csv");
     }
 }

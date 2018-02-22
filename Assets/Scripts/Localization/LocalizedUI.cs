@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class LocalizedUI : MonoBehaviour
 {
 	[SerializeField]
-	string _Key;
+	private string _Key;
 
     Text _Text;
 
