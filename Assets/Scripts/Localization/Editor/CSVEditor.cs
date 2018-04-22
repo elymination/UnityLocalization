@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CSVEditor
 {
-
     [MenuItem("Assets/Edit CSV file")]
     private static void EditCSV()
     {
@@ -16,14 +15,14 @@ public class CSVEditor
     [MenuItem("Assets/Edit CSV file", true)]
     private static bool ValidateEditCSV()
     {
-        Object lSelected = Selection.activeObject;
-        string lExtension = string.Empty;
+        var selected = Selection.activeObject;
+        string extension = string.Empty;
 
-        TextAsset asset = lSelected as TextAsset;
+        TextAsset asset = selected as TextAsset;
         if (asset != null)
         {
-            lExtension = Path.GetExtension(AssetDatabase.GetAssetPath(lSelected));
+            extension = Path.GetExtension(AssetDatabase.GetAssetPath(selected));
         }
-        return lSelected.GetType() == typeof(TextAsset) && lExtension.Equals(".csv");
+        return selected.GetType() == typeof(TextAsset) && extension.Equals(".csv");
     }
 }

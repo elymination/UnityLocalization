@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4000012151903366}
-  - component: {fileID: 114000012776220442}
+  - component: {fileID: 114512547671819350}
   m_Layer: 0
   m_Name: LocalizationManager
   m_TagString: Untagged
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114000012776220442
+--- !u!114 &114512547671819350
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013427942942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b78b62231fd0b2a418851ca7be5d126a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e90a129980eda949804222412f62c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Language: 0
+  _Language: 

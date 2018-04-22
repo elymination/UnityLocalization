@@ -3,54 +3,50 @@ using System.IO;
 
 using UnityEngine;
 
-[System.Serializable]
 public class LocalizationManager : MonoBehaviour
 {
-    [HideInInspector]
     [SerializeField]
-	private string mLanguage;
-	private string mTmpLanguage;
+    string _Language;
+    string _TmpLanguage;
 
-    [HideInInspector]
-    [SerializeField]
-    private string mFile;
+    string _File;
 
-	public string File
-	{
-		get
-		{
-			return mFile;
-		}
-		set
-		{
-            mFile = value;
-		}
-	}
-
-	void Awake()
-	{
-		TextAsset lFileData = Resources.Load<TextAsset>(File);
-        LocalizationService.LoadData(lFileData.text);
-		LocalizationService.SetLanguage(mLanguage);
-        mTmpLanguage = mLanguage;
-	}
-    
-    public void SetLanguage(string pLanguage)
+    public string File
     {
-        mLanguage = pLanguage;
+        get
+        {
+            return _File;
+        }
+        set
+        {
+            _File = value;
+        }
     }
 
-	void Update()
-	{
-		if (mTmpLanguage != mLanguage)
-		{
-			LocalizationService.SetLanguage(mLanguage);
-            mTmpLanguage = mLanguage;
-			LocalizedUI[] lLocalized = FindObjectsOfType<LocalizedUI>();
-			foreach (LocalizedUI lUI in lLocalized)
-			{
-				lUI.SetText();
-			}
-		}
-	}
+    void Awake()
+    {
+        TextAsset FileData = Resources.Load<TextAsset>("Localization");
+        LocalizationService.LoadData(FileData.text);
+        LocalizationService.SetLanguage(_Language);
+        _TmpLanguage = _Language;
+    }
+
+    public void SetLanguage(string pLanguage)
+    {
+        _Language = pLanguage;
+    }
+
+    void Update()
+    {
+        if (_TmpLanguage != _Language)
+        {
+            LocalizationService.SetLanguage(_Language);
+            _TmpLanguage = _Language;
+            LocalizedUI[] lLocalized = FindObjectsOfType<LocalizedUI>();
+            foreach (LocalizedUI lUI in lLocalized)
+            {
+                lUI.SetText();
+            }
+        }
+    }
 }

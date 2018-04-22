@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 using UnityEngine;
+
 
 public static class LocalizationService
 {
@@ -116,6 +118,7 @@ public static class LocalizationService
         return pKeyName;
     }
 
+
     public static List<string> GetKeys()
     {
         return mValues.FirstOrDefault().Value.Keys.ToList<string>();
@@ -125,7 +128,7 @@ public static class LocalizationService
     {
         return mValues;
     }
-    
+
     public static void Update(Dictionary<string, Dictionary<string, string>> pValues)
     {
         mValues = pValues;

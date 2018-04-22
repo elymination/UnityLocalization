@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224000011561887434}
   - component: {fileID: 222000014268934156}
   - component: {fileID: 114000013537920978}
-  - component: {fileID: 114000010929345718}
+  - component: {fileID: 114811124984904540}
   m_Layer: 5
   m_Name: LocalizedText
   m_TagString: Untagged
@@ -29,18 +29,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114000010929345718
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012418704180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e38a5098b8cf5aa4ea214b61a69c70b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Key: KEY_EXAMPLE
 --- !u!114 &114000013537920978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -73,7 +61,21 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text
+  m_Text: '
+
+'
+--- !u!114 &114811124984904540
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012418704180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60f00909b2448c45afa26991245a4bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Key: 
 --- !u!222 &222000014268934156
 CanvasRenderer:
   m_ObjectHideFlags: 1
