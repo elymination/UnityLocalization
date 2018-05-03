@@ -27,13 +27,16 @@ public class CSVEditorWindow : EditorWindow
 
     public static void ShowWindow()
     {
+        Texture lIcon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Resources/CSVEditorIcon.png");
         mResourcesPath = Application.dataPath + "/Resources/";
         mAssetPath = AssetDatabase.GetAssetPath(mEditedFile);
         LocalizationService.LoadCSV(mAssetPath);
         mLanguages = LocalizationService.GetLanguages();
         mKeys = LocalizationService.GetKeys();
         mCopiedValues = LocalizationService.GetValues();
-        GetWindow<CSVEditorWindow>(false, "CSV Editor", true);
+        CSVEditorWindow lWindow = GetWindow<CSVEditorWindow>(false, "CSV Editor", true);
+        GUIContent lTitleContent = new GUIContent("CSV Editor", lIcon);
+        lWindow.titleContent = lTitleContent;
         mFileSystemWatcher = new FileSystemWatcher();
         mFileSystemWatcher.Path = mResourcesPath;
         mFileSystemWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -71,6 +74,8 @@ public class CSVEditorWindow : EditorWindow
 
     void OnGUI()
     {
+        string lPoppedTempKey = string.Empty;
+        string lPoppedKey = string.Empty;
         mScrollPosition = EditorGUILayout.BeginScrollView(mScrollPosition);
         GUILayout.BeginHorizontal();
         GUILayout.Label(string.Empty, GUILayout.Width(200));
@@ -86,7 +91,10 @@ public class CSVEditorWindow : EditorWindow
         foreach (string lKey in mKeys)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Button("-", GUILayout.Width(15));
+            if (GUILayout.Button("-", GUILayout.Width(15)) == true)
+            {
+                lPoppedKey = lKey;
+            }
             GUILayout.Label(lKey, GUILayout.Width(200));
 
             foreach (string lLanguage in mLanguages)
@@ -97,7 +105,16 @@ public class CSVEditorWindow : EditorWindow
         }
         EditorGUILayout.EndScrollView();
 
-        // If temporary keys are created
+        if (lPoppedKey != string.Empty)
+        {
+            foreach (string lLanguage in mLanguages)
+            {
+                mCopiedValues[lLanguage].Remove(lPoppedKey);
+            }
+            mKeys.Remove(lPoppedKey);
+        }
+
+        // If temporary keys were created.
         if (mAddedKeys.Count > 0)
         {
             mSecondScrollPosition = EditorGUILayout.BeginScrollView(mSecondScrollPosition);
@@ -105,7 +122,10 @@ public class CSVEditorWindow : EditorWindow
             foreach (string lKey in mAddedKeys.Keys)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Button("-", GUILayout.Width(15));
+                if (GUILayout.Button("-", GUILayout.Width(15)) == true)
+                {
+                    lPoppedTempKey = lKey;
+                }
                 GUILayout.Label(lKey, GUILayout.Width(200));
                 foreach (string lLanguage in mLanguages)
                 {
@@ -115,18 +135,22 @@ public class CSVEditorWindow : EditorWindow
             }
             EditorGUILayout.EndScrollView();
         }
+        if (lPoppedTempKey != string.Empty)
+        {
+            mAddedKeys.Remove(lPoppedTempKey);
+        }
         GUILayout.BeginHorizontal();
         mKeyName = GUILayout.TextField(mKeyName, GUILayout.Width(200));
         if (GUILayout.Button("Add", GUILayout.Width(50)) == true)
         {
-            if (mKeys.Contains(mKeyName) || mAddedKeys.Keys.Contains(mKeyName))
+            if (mKeyName.Equals(string.Empty) || mKeys.Contains(mKeyName) || mAddedKeys.Keys.Contains(mKeyName))
             {
                 return;
             }
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
             foreach (string lLanguage in mLanguages)
             {
-                lDictionary.Add(lLanguage, string.Empty);
+                lDictionary.Add(lLanguage, "Enter value");
             }
             mAddedKeys.Add(mKeyName, lDictionary);
             mKeyName = string.Empty;
@@ -134,7 +158,38 @@ public class CSVEditorWindow : EditorWindow
         GUILayout.EndHorizontal();
         if (GUILayout.Button("Save CSV", GUILayout.Width(200)) == true)
         {
-            // Write to file
+            // Write the existing keys (and remove the deleted ones) to the CSV file.
+            using (StreamWriter sw = new StreamWriter(mAssetPath))
+            {
+                string lFullText = "Key;";
+                foreach (string lLanguage in mLanguages)
+                {
+                    lFullText += lLanguage;
+                    lFullText += ";";
+                }
+                lFullText = lFullText.Substring(0, lFullText.Length - 1);
+                lFullText += "\n";
+                foreach (string lKey in mKeys)
+                {
+                    string lText = string.Empty;
+                    lText += lKey;
+                    lText += ";";
+                    foreach (string lLanguage in mLanguages)
+                    {
+                        if (mCopiedValues[lLanguage][lKey] != string.Empty)
+                        {
+                            lText += mCopiedValues[lLanguage][lKey];
+                        }
+                        lText += ";";
+                    }
+                    lText = lText.Substring(0, lText.Length - 1);
+                    lFullText += lText + "\n";
+                }
+                lFullText = lFullText.Substring(0, lFullText.Length - 1);
+                sw.Write(lFullText);
+            }
+
+            // Write the new values to the CSV file.
             using (StreamWriter sw = File.AppendText(mAssetPath))
             {
                 bool lHasEmptyKey = false;
@@ -164,10 +219,11 @@ public class CSVEditorWindow : EditorWindow
                     lText = lText.Substring(0, lText.Length - 1);
                     lFullText += lText + "\n";
                 }
-                if (lHasEmptyKey == false)
+                if (lHasEmptyKey == false && lFullText.Length > 0)
                 {
-                    sw.WriteLine(lFullText);
-                    mAddedKeys = new Dictionary<string, Dictionary<string, string>>();
+                    lFullText = lFullText.Substring(0, lFullText.Length - 1);
+                    sw.Write(lFullText);
+                    mAddedKeys.Clear();
                 }
             }
         }
