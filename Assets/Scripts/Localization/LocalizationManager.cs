@@ -7,19 +7,14 @@ public class LocalizationManager : MonoBehaviour
 {
     [SerializeField]
     string _Language;
-    string _TmpLanguage;
 
-    string _File;
-
-    public string File
+    public string Language
     {
-        get
-        {
-            return _File;
-        }
         set
         {
-            _File = value;
+            _Language = value;
+            LocalizationService.SetLanguage(value);
+            UpdateLocalizedUI();
         }
     }
 
@@ -28,25 +23,14 @@ public class LocalizationManager : MonoBehaviour
         TextAsset FileData = Resources.Load<TextAsset>("Localization");
         LocalizationService.LoadData(FileData.text);
         LocalizationService.SetLanguage(_Language);
-        _TmpLanguage = _Language;
     }
 
-    public void SetLanguage(string pLanguage)
+    void UpdateLocalizedUI()
     {
-        _Language = pLanguage;
-    }
-
-    void Update()
-    {
-        if (_TmpLanguage != _Language)
+        LocalizedUI[] lLocalized = FindObjectsOfType<LocalizedUI>();
+        foreach (LocalizedUI lUI in lLocalized)
         {
-            LocalizationService.SetLanguage(_Language);
-            _TmpLanguage = _Language;
-            LocalizedUI[] lLocalized = FindObjectsOfType<LocalizedUI>();
-            foreach (LocalizedUI lUI in lLocalized)
-            {
-                lUI.SetText();
-            }
+            lUI.SetText();
         }
     }
 }
