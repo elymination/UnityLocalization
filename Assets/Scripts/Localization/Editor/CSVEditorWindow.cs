@@ -63,7 +63,7 @@ public class CSVEditorWindow : EditorWindow
             }
             finally
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(50);
             }
         }
         LocalizationService.LoadCSV(mAssetPath);
@@ -99,7 +99,10 @@ public class CSVEditorWindow : EditorWindow
 
             foreach (string lLanguage in mLanguages)
             {
-                mCopiedValues[lLanguage][lKey] = GUILayout.TextField(mCopiedValues[lLanguage][lKey], GUILayout.Width(200));
+                GUILayout.FlexibleSpace();
+                mCopiedValues[lLanguage][lKey] = GUILayout.TextField(mCopiedValues[lLanguage][lKey], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
+                GUILayout.FlexibleSpace();
+
             }
             GUILayout.EndHorizontal();
         }
@@ -129,7 +132,9 @@ public class CSVEditorWindow : EditorWindow
                 GUILayout.Label(lKey, GUILayout.Width(200));
                 foreach (string lLanguage in mLanguages)
                 {
-                    mAddedKeys[lKey][lLanguage] = GUILayout.TextField(mAddedKeys[lKey][lLanguage], GUILayout.Width(200));
+                    GUILayout.FlexibleSpace();
+                    mAddedKeys[lKey][lLanguage] = GUILayout.TextField(mAddedKeys[lKey][lLanguage], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
+                    GUILayout.FlexibleSpace();
                 }
                 GUILayout.EndHorizontal();
             }
@@ -143,89 +148,105 @@ public class CSVEditorWindow : EditorWindow
         mKeyName = GUILayout.TextField(mKeyName, GUILayout.Width(200));
         if (GUILayout.Button("Add", GUILayout.Width(50)) == true)
         {
-            if (mKeyName.Equals(string.Empty) || mKeys.Contains(mKeyName) || mAddedKeys.Keys.Contains(mKeyName))
-            {
-                return;
-            }
-            Dictionary<string, string> lDictionary = new Dictionary<string, string>();
-            foreach (string lLanguage in mLanguages)
-            {
-                lDictionary.Add(lLanguage, "Enter value");
-            }
-            mAddedKeys.Add(mKeyName, lDictionary);
-            mKeyName = string.Empty;
+            CreateKey();
         }
+
         GUILayout.EndHorizontal();
         if (GUILayout.Button("Save CSV", GUILayout.Width(200)) == true)
         {
-            // Write the existing keys (and remove the deleted ones) to the CSV file.
-            using (StreamWriter sw = new StreamWriter(mAssetPath))
+            RefreshCSV();
+            WriteNewValues();
+        }
+    }
+
+    // Write the existing keys (and remove the deleted ones) to the CSV file.
+    private void RefreshCSV()
+    {
+        using (StreamWriter sw = new StreamWriter(mAssetPath))
+        {
+            string lFullText = "Key;";
+            foreach (string lLanguage in mLanguages)
             {
-                string lFullText = "Key;";
+                lFullText += lLanguage;
+                lFullText += ";";
+            }
+            lFullText = lFullText.Substring(0, lFullText.Length - 1);
+            lFullText += "\n";
+            foreach (string lKey in mKeys)
+            {
+                string lText = string.Empty;
+                lText += lKey;
+                lText += ";";
                 foreach (string lLanguage in mLanguages)
                 {
-                    lFullText += lLanguage;
-                    lFullText += ";";
-                }
-                lFullText = lFullText.Substring(0, lFullText.Length - 1);
-                lFullText += "\n";
-                foreach (string lKey in mKeys)
-                {
-                    string lText = string.Empty;
-                    lText += lKey;
-                    lText += ";";
-                    foreach (string lLanguage in mLanguages)
+                    if (mCopiedValues[lLanguage][lKey] != string.Empty)
                     {
-                        if (mCopiedValues[lLanguage][lKey] != string.Empty)
-                        {
-                            lText += mCopiedValues[lLanguage][lKey];
-                        }
-                        lText += ";";
+                        lText += mCopiedValues[lLanguage][lKey];
                     }
-                    lText = lText.Substring(0, lText.Length - 1);
-                    lFullText += lText + "\n";
+                    lText += ";";
                 }
-                lFullText = lFullText.Substring(0, lFullText.Length - 1);
-                sw.Write(lFullText);
+                lText = lText.Substring(0, lText.Length - 1);
+                lFullText += lText + "\n";
             }
+            lFullText = lFullText.Substring(0, lFullText.Length - 1);
+            sw.Write(lFullText);
+        }
+    }
 
-            // Write the new values to the CSV file.
-            using (StreamWriter sw = File.AppendText(mAssetPath))
+    // Write the new values to the CSV file.
+    private void WriteNewValues()
+    {
+        using (StreamWriter sw = File.AppendText(mAssetPath))
+        {
+            bool lHasEmptyKey = false;
+            string lFullText = string.Empty;
+            foreach (string lKey in mAddedKeys.Keys)
             {
-                bool lHasEmptyKey = false;
-                string lFullText = string.Empty;
-                foreach (string lKey in mAddedKeys.Keys)
+                string lText = string.Empty;
+                lText += "\n" + lKey;
+                lText += ";";
+                foreach (string lLanguage in mLanguages)
                 {
-                    string lText = string.Empty;
-                    lText += lKey;
-                    lText += ";";
-                    foreach (string lLanguage in mLanguages)
+                    if (mAddedKeys[lKey][lLanguage] != string.Empty)
                     {
-                        if (mAddedKeys[lKey][lLanguage] != string.Empty)
-                        {
-                            lText += mAddedKeys[lKey][lLanguage];
-                        }
-                        else
-                        {
-                            lHasEmptyKey = true;
-                            break;
-                        }
-                        lText += ";";
+                        lText += mAddedKeys[lKey][lLanguage];
                     }
-                    if (lHasEmptyKey == true)
+                    else
                     {
+                        lHasEmptyKey = true;
                         break;
                     }
-                    lText = lText.Substring(0, lText.Length - 1);
-                    lFullText += lText + "\n";
+                    lText += ";";
                 }
-                if (lHasEmptyKey == false && lFullText.Length > 0)
+                if (lHasEmptyKey == true)
                 {
-                    lFullText = lFullText.Substring(0, lFullText.Length - 1);
-                    sw.Write(lFullText);
-                    mAddedKeys.Clear();
+                    break;
                 }
+                lText = lText.Substring(0, lText.Length - 1);
+                lFullText += lText;
+            }
+            if (lHasEmptyKey == false && lFullText.Length > 0)
+            {
+                //lFullText = lFullText.Substring(0, lFullText.Length - 1);
+                sw.Write(lFullText);
+                mAddedKeys.Clear();
             }
         }
+    }
+
+    // Create new key
+    private void CreateKey()
+    {
+        if (mKeyName.Equals(string.Empty) || mKeys.Contains(mKeyName) || mAddedKeys.Keys.Contains(mKeyName))
+        {
+            return;
+        }
+        Dictionary<string, string> lDictionary = new Dictionary<string, string>();
+        foreach (string lLanguage in mLanguages)
+        {
+            lDictionary.Add(lLanguage, "Enter value");
+        }
+        mAddedKeys.Add(mKeyName, lDictionary);
+        mKeyName = string.Empty;
     }
 }
