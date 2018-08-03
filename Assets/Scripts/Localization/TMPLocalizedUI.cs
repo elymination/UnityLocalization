@@ -10,7 +10,6 @@ public class TMPLocalizedUI : MonoBehaviour
 {
     [SerializeField]
     string _Key;
-
     TextMeshProUGUI _Text;
 
     public string Key
@@ -22,17 +21,24 @@ public class TMPLocalizedUI : MonoBehaviour
         set
         {
             _Key = value;
+            SetText();
         }
     }
 
     void Start()
     {
         _Text = gameObject.GetComponent<TextMeshProUGUI>();
-        _Text.text = LocalizationService.GetLocalizedString(_Key);
+        if (_Text != null)
+        {
+            _Text.text = LocalizationService.GetLocalizedString(_Key);
+        }
     }
 
     public void SetText()
     {
-        _Text.text = LocalizationService.GetLocalizedString(_Key);
+        if (_Text != null)
+        {
+            _Text.text = LocalizationService.GetLocalizedString(_Key);
+        }
     }
 }

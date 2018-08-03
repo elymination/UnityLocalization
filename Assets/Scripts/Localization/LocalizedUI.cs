@@ -10,7 +10,6 @@ public class LocalizedUI : MonoBehaviour
 {
 	[SerializeField]
 	string _Key;
-
     Text _Text;
 
 	public string Key
@@ -22,17 +21,24 @@ public class LocalizedUI : MonoBehaviour
         set
         {
             _Key = value;
+            SetText();
         }
 	}
 
 	void Start()
 	{
         _Text = gameObject.GetComponent<Text>();
-	    _Text.text = LocalizationService.GetLocalizedString(_Key);
+        if (_Text != null)
+        {
+            _Text.text = LocalizationService.GetLocalizedString(_Key);
+        }
 	}
 
 	public void SetText()
 	{
-		_Text.text = LocalizationService.GetLocalizedString(_Key);
+        if (_Text)
+        {
+            _Text.text = LocalizationService.GetLocalizedString(_Key);
+        }
 	}
 }
