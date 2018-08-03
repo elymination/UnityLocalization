@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// Regular localized UI text. Add this component of a GameObject that has a Text component to make it localized.
+/// </summary>
+[RequireComponent(typeof(UnityEngine.UI.Text))]
+[DisallowMultipleComponent]
 public class LocalizedUI : MonoBehaviour
 {
 	[SerializeField]
