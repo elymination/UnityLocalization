@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,13 +11,15 @@ public class CSVEditor
         CSVEditorWindow.ShowWindow();
     }
 
-
     [MenuItem("Assets/Edit CSV file", true)]
     private static bool ValidateEditCSV()
     {
-        var selected = Selection.activeObject;
+        Object selected = Selection.activeObject; 
+        if (selected == null)
+        {
+            return false;
+        }
         string extension = string.Empty;
-
         TextAsset asset = selected as TextAsset;
         if (asset != null)
         {
