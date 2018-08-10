@@ -131,7 +131,7 @@ public class CSVEditorWindow : EditorWindow
             foreach (string lLanguage in mLanguages)
             {
                 GUILayout.FlexibleSpace();
-                mCopiedValues[lLanguage][lKey] = GUILayout.TextField(mCopiedValues[lLanguage][lKey], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
+                mCopiedValues[lLanguage][lKey] = EditorGUILayout.TextField(mCopiedValues[lLanguage][lKey], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
                 GUILayout.FlexibleSpace();
 
             }
@@ -164,7 +164,7 @@ public class CSVEditorWindow : EditorWindow
                 foreach (string lLanguage in mLanguages)
                 {
                     GUILayout.FlexibleSpace();
-                    mAddedKeys[lKey][lLanguage] = GUILayout.TextField(mAddedKeys[lKey][lLanguage], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
+                    mAddedKeys[lKey][lLanguage] = EditorGUILayout.TextField(mAddedKeys[lKey][lLanguage], GUILayout.MinWidth(300), GUILayout.MaxWidth(300));
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.EndHorizontal();
@@ -182,9 +182,9 @@ public class CSVEditorWindow : EditorWindow
             mHasChanged = true;
         }
 
-        mKeyName = GUILayout.TextField(mKeyName, GUILayout.Width(200), GUILayout.Height(15));
+        mKeyName = EditorGUILayout.TextField(mKeyName, GUILayout.Width(200));
 
-        if (GUILayout.Button("Add", GUILayout.Width(100), GUILayout.Height(15)) == true)
+        if (GUILayout.Button("Add", GUILayout.Width(100)) == true)
         {
             if (CreateKey() == true)
             {
@@ -204,15 +204,14 @@ public class CSVEditorWindow : EditorWindow
             }
         }
         GUILayout.EndHorizontal();
-        GUILayout.BeginVertical();
-        GUILayout.Space(10);
-        GUILayout.EndVertical();
         if (mIsDirty == true)
         {
             AssetDatabase.Refresh();
             mIsDirty = false;
         }
-
+        GUILayout.BeginVertical();
+        GUILayout.Space(5);
+        GUILayout.EndVertical();
         GUI.changed = false;
         GUILayout.BeginHorizontal();
         mEditedFile = EditorGUILayout.ObjectField(mEditedFile, typeof(TextAsset), false, GUILayout.MinWidth(150), GUILayout.MaxWidth(300), GUILayout.ExpandWidth(false)) as TextAsset;
@@ -221,6 +220,9 @@ public class CSVEditorWindow : EditorWindow
             LoadAsset(mEditedFile);
         }
         GUILayout.EndHorizontal();
+        GUILayout.BeginVertical();
+        GUILayout.Space(5);
+        GUILayout.EndVertical();
     }
 
     // Write the existing keys (and remove the deleted ones) to the CSV file.
