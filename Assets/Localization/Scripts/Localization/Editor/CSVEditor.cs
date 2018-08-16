@@ -14,7 +14,7 @@ public class CSVEditor
     [MenuItem("Assets/Edit CSV file", true)]
     private static bool ValidateEditCSV()
     {
-        Object selected = Selection.activeObject; 
+        Object selected = Selection.activeObject;
         if (selected == null)
         {
             return false;

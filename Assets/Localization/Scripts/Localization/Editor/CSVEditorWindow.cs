@@ -32,7 +32,7 @@ public class CSVEditorWindow : EditorWindow
     [MenuItem("Window/CSV Editor")]
     public static void ShowWindow()
     {
-        mIcon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Resources/CSVEditorIcon.png");
+        mIcon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Localization/Icon/CSVEditorIcon.png");
         mResourcesPath = Application.dataPath + "/Resources/";
         PrepareWindow("CSV Editor");
         if (mEditedFile != null)
@@ -44,6 +44,10 @@ public class CSVEditorWindow : EditorWindow
     private static void LoadAsset(TextAsset pAsset)
     {
         SetTitle("CSV Editor");
+        if (pAsset == null)
+        {
+            return;
+        }
         mAssetPath = AssetDatabase.GetAssetPath(pAsset);
         LocalizationService.LoadCSV(mAssetPath);
         mLanguages = LocalizationService.GetLanguages();
