@@ -97,11 +97,17 @@ public static class LocalizationService
 
     public static string GetLocalizedString(string pKeyName)
     {
-        if (mValues[mCurrentLanguage].ContainsKey(pKeyName))
+        if (mCurrentLanguage == string.Empty || mCurrentLanguage == null || mValues == null)
         {
-            return mValues[mCurrentLanguage][pKeyName];
+            return pKeyName;
         }
-
+        if (mValues[mCurrentLanguage] != null)
+        {
+            if (mValues[mCurrentLanguage].ContainsKey(pKeyName))
+            {
+                return mValues[mCurrentLanguage][pKeyName];
+            }
+        }
         return pKeyName;
     }
 

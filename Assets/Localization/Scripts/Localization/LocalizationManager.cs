@@ -3,6 +3,8 @@
 public class LocalizationManager : MonoBehaviour
 {
     [SerializeField]
+    TextAsset _LocalizationFile;
+    [SerializeField]
     string _Language;
 
     public string Language
@@ -17,8 +19,11 @@ public class LocalizationManager : MonoBehaviour
 
     void Awake()
     {
-        TextAsset FileData = Resources.Load<TextAsset>("Localization");
-        LocalizationService.LoadData(FileData.text);
+        if (_LocalizationFile == null)
+        {
+            return;
+        }
+        LocalizationService.LoadData(_LocalizationFile.text);
         LocalizationService.SetLanguage(_Language);
     }
 

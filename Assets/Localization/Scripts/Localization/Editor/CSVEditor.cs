@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class CSVEditor
 {
-    [MenuItem("Assets/Edit CSV file")]
+    [MenuItem("Assets/CSV Editor/Edit CSV file")]
     private static void EditCSV()
     {
         CSVEditorWindow.LoadFile(Selection.activeObject as TextAsset);
         CSVEditorWindow.ShowWindow();
     }
 
-    [MenuItem("Assets/Edit CSV file", true)]
+    [MenuItem("Assets/CSV Editor/Edit CSV file", true)]
     private static bool ValidateEditCSV()
     {
         Object selected = Selection.activeObject;

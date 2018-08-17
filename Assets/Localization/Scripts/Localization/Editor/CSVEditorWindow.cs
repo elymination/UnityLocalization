@@ -109,13 +109,16 @@ public class CSVEditorWindow : EditorWindow
         }
         string lPoppedTempKey = string.Empty;
         string lPoppedKey = string.Empty;
-        mScrollPosition = EditorGUILayout.BeginScrollView(mScrollPosition);
+
+        // Changes the top section horizontal scrollbar style to none so it doesn't show if keys were added.
+        GUIStyle scrollStyle = mAddedKeys.Count > 0 ? GUIStyle.none : GUI.skin.horizontalScrollbar;
+        mScrollPosition = EditorGUILayout.BeginScrollView(mScrollPosition, scrollStyle, GUI.skin.verticalScrollbar);
         GUILayout.BeginHorizontal();
-        GUILayout.Label(string.Empty, GUILayout.Width(200));
+        EditorGUILayout.SelectableLabel(string.Empty, GUILayout.Width(200));
         foreach (string lLanguage in mLanguages)
         {
             GUILayout.FlexibleSpace();
-            GUILayout.Label(lLanguage);
+            EditorGUILayout.SelectableLabel(lLanguage);
             GUILayout.FlexibleSpace();
         }
         GUILayout.EndHorizontal();
@@ -130,7 +133,7 @@ public class CSVEditorWindow : EditorWindow
                 SetTitle("CSV Editor*");
                 mHasChanged = true;
             }
-            GUILayout.Label(lKey, GUILayout.Width(200));
+            EditorGUILayout.SelectableLabel(lKey, GUILayout.Width(200));
 
             foreach (string lLanguage in mLanguages)
             {
@@ -151,12 +154,12 @@ public class CSVEditorWindow : EditorWindow
             }
             mKeys.Remove(lPoppedKey);
         }
-
         // If temporary keys were created.
         if (mAddedKeys.Count > 0)
         {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             mSecondScrollPosition = EditorGUILayout.BeginScrollView(mSecondScrollPosition);
-            mSecondScrollPosition.x = mScrollPosition.x;
+            mScrollPosition.x = mSecondScrollPosition.x;
             foreach (string lKey in mAddedKeys.Keys)
             {
                 GUILayout.BeginHorizontal();
@@ -164,7 +167,7 @@ public class CSVEditorWindow : EditorWindow
                 {
                     lPoppedTempKey = lKey;
                 }
-                GUILayout.Label(lKey, GUILayout.Width(200));
+                EditorGUILayout.SelectableLabel(lKey, GUILayout.Width(200));
                 foreach (string lLanguage in mLanguages)
                 {
                     GUILayout.FlexibleSpace();
@@ -175,10 +178,12 @@ public class CSVEditorWindow : EditorWindow
             }
             EditorGUILayout.EndScrollView();
         }
+
         if (lPoppedTempKey != string.Empty)
         {
             mAddedKeys.Remove(lPoppedTempKey);
         }
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
         GUILayout.BeginHorizontal();
         if (GUI.changed == true)
