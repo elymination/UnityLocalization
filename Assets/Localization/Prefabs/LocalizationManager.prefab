@@ -51,4 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a449bd9fa5cf341be482d9a6218b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _LocalizationFile: {fileID: 4900000, guid: 8aaf43182e4fa9845b2bc58078ab5a09, type: 3}
   _Language: English
